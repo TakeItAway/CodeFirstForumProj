@@ -52,12 +52,12 @@ namespace CodeFirstForum.Controllers
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-            Manual instr = context.Manuals.Find(id);
+            Manual manual = context.Manuals.Find(id);
             ManualViewModel model = new ManualViewModel
             {
-                Manual = instr,
+                Manual = manual,
                 //Steps = context.Steps.Where(s => s.InstructionId == instr.InstructionId).ToList(),
-                Comments = context.Comments.Where(c => c.ManualId == instr.ManualId).ToList(),
+                Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
                 User = user,
                 Context = context,
                 Tags = ManualHelper.GetAllManualTags(id, context)
@@ -183,29 +183,23 @@ namespace CodeFirstForum.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddComment(string content, string userId, int instrId)
+        public ActionResult AddComment(string content, string userId, int manualId)
         {
             Comment toAdd = new Comment()
             {
                 AuthorId = userId,
                 Content = content,
-                ManualId = instrId
+                ManualId = manualId
             };
             context.Comments.Add(toAdd);
-            List<ManualTag> instrTags = context.ManualTags.Where(t => t.ManualId == instrId).ToList();
-            List<string> tags = new List<string>();
-            foreach (ManualTag it in instrTags)
-            {
-                tags.Add(context.Tags.Find(it.TagId).Name);
-            }
             context.SaveChanges();
             ManualViewModel model = new ManualViewModel()
             {
-                Manual = context.Manuals.Find(instrId),
+                Manual = context.Manuals.Find(manualId),
                 User = context.ApplicationUsers.Find(userId),
                 //Steps = context.Steps.Where(s => s.InstructionId == instrId).ToList(),
-                Tags = ManualHelper.GetAllManualTags(instrId, context),
-                Comments = context.Comments.Where(c => c.ManualId == instrId).ToList(),
+                Tags = ManualHelper.GetAllManualTags(manualId, context),
+                Comments = context.Comments.Where(c => c.ManualId == manualId).ToList(),
                 Context = context
             };
             return View("Manual", model);
