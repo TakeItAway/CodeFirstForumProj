@@ -1,0 +1,81 @@
+﻿@model CodeFirstForum.ViewModels.HomeIndexViewModel;
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <a asp-action="Index" class="btn btn-default">All</a>
+        @if (Model.TagId != null)
+        {
+            <div>
+                @{
+                    Tag tag = Model.Tags.Find(t => t.TagId == Model.TagId);
+                }
+            </div>
+            <a asp-action="Index" asp-route-tagId="@Model.TagId" class="btn btn-info">@tag.Name</a>
+        }
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-8 col-sm-8">
+        @foreach (Manual manual in Model.Manuals)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="thumbnail" style="height: 110px; width:110px">
+                                <img id="photo" style="height: 100px; width: 100px" src="@manual.Photo">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <a asp-controller="Profile" asp-action="Manual" asp-route-id="@manual.ManualId">
+                                <h3>@manual.Title</h3>
+                            </a>
+                            <hr />
+                            @{
+                                List<ManualTag> mTags = Model.Context.ManualTags.Where(man => man.ManualTagId == manual.ManualId).ToList();
+                                List<Tag> tags = new List<Tag>();
+                                foreach (ManualTag mTag in mTags)
+                                {
+                                    tags.Add(Model.Context.Tags.Find(mTag.TagId));
+                                }
+                            }
+                            @foreach (Tag tag in tags)
+                            {
+                                <div>
+                                    @{
+                                        CodeFirstForum.ViewModels.HomeIndexViewModel newModel =
+                                            new CodeFirstForum.ViewModels.HomeIndexViewModel { TagId = tag.TagId };
+
+                                    }
+                                </div>
+                                <a asp-action="Index" asp-route-tagId="@tag.TagId" class="btn btn-info btn-sm">@tag.Name</a>
+
+                            }
+                            <h5>@manual.Description</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+    <aside class="col-md-4 col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @foreach (Tag tag in Model.Tags)
+                {
+                    <div>
+                        @{
+                            CodeFirstForum.ViewModels.HomeIndexViewModel newModel =
+                                            new CodeFirstForum.ViewModels.HomeIndexViewModel { TagId = tag.TagId };
+                        }
+                    </div>
+                    <a asp-action="Index" asp-route-tagId="@tag.TagId" class="btn btn-info btn-sm">@tag.Name</a>
+                }
+            </div>
+        </div>
+    </aside>
+</div>

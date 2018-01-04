@@ -1,0 +1,28 @@
+﻿@model CodeFirstForum.Models.ApplicationUser
+@{
+    ViewData["Title"] = "UnBlock";
+}
+<h2>Block</h2>
+<h3>Are you sure you want to appoint this user as admin?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+    <form asp-action="Appoint">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Appoint" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

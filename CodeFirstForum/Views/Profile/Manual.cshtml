@@ -1,0 +1,79 @@
+﻿@model CodeFirstForum.ViewModels.ManualViewModel
+@using CodeFirstForum.Data;
+
+@inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext db
+@{
+    ViewData["Title"] = "Instruction";
+}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="thumbnail" style="height: 310px; width:310px">
+                    <img id="photo" style="height: 300px; width: 300px" src="@Model.Manual.Photo">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h2>@Model.Manual.Title</h2>
+                <hr />
+                @foreach (string tag in Model.Tags)
+                {
+                    <button class="btn btn-info btn-sm">@tag</button>
+                }
+                <hr />
+                <h5>@Model.Manual.Description</h5>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+<div id="comments">
+
+    @foreach (Comment comment in Model.Comments)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @{
+                    ApplicationUser author = Model.Context.ApplicationUsers.Find(comment.AuthorId);
+                }
+                <div class="col-md-1">
+
+                    <div class="thumbnail" style="height: 46px; width:46px">
+                        <img id="photo" style="height: 40px; width: 40px" src="@author.Photo">
+                    </div>
+                </div>
+                <div class="col-md-11">
+                    <b>@author.UserName</b>
+                    <hr />
+                    <p>@comment.Content</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-1">
+                <div class="thumbnail" style="height: 46px; width:46px">
+                    <img id="userPhoto" style="height: 40px; width: 40px" src="@Model.User.Photo">
+                </div>
+            </div>
+            <div class="col-md-10">
+                <b id="userName">@Model.User.UserName</b>
+                <hr />
+                <form asp-action="AddComment">
+                    <textarea name="content" id="message" class="form-control" rows="5" value=""></textarea>
+                    <div class="form-group" hidden="hidden">
+                        <input name="userId" class="form-control" value="@Model.User.Id" />
+                        <input name="instrId" class="form-control" value="@Model.Manual.ManualId" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Add" class="btn btn-default" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

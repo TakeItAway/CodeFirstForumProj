@@ -1,0 +1,84 @@
+﻿
+@model CodeFirstForum.ViewModels.CreateManualViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="col-md-8">
+    <form asp-action="CreateManual" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group" hidden="hidden">
+            <label asp-for="AuthorId" class="control-label"></label>
+            <input asp-for="AuthorId" class="form-control" value="@Model.AuthorId" />
+            <span asp-validation-for="AuthorId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+        <link rel="stylesheet" href="~/lib/bootstrap-tagsinput/src/bootstrap-tagsinput.css" />
+        <style type="text/css">
+
+            .bootstrap-tagsinput {
+                width: 100%;
+            }
+
+            .label {
+                line-height: 2;
+            }
+        </style>
+        <script>
+                        $(document).ready(function () {
+                            $('#bootstrapTagsInputForm')
+                                .find('[name="tags"]')
+                                // Revalidate the cities field when it is changed
+                                .change(function (e) {
+                                    $('#bootstrapTagsInputForm').formValidation('revalidateField', 'tags');
+                                })
+                                .end()
+
+                                .formValidation({
+                                    framework: 'bootstrap',
+                                    excluded: ':disabled',
+                                    icon: {
+                                        valid: 'glyphicon glyphicon-ok',
+                                        invalid: 'glyphicon glyphicon-remove',
+                                        validating: 'glyphicon glyphicon-refresh'
+                                    },
+                                    fields: {
+                                        cities: {
+                                            validators: {
+                                                notEmpty: {
+                                                    message: 'Please enter at least one tag.'
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                        });
+        </script>
+        <div class="form-group">
+            <label asp-for="Tags" class="control-label">Tags:</label>
+            <input asp-for="Tags" type="text" name="tags" class="form-control"
+                   value="" data-role="tagsinput" aria-hidden="true" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden="hidden">
+            <label asp-for="Photo" class="control-label"></label>
+            <input asp-for="Photo" class="form-control" id="inPhoto" value="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg" />
+            <span asp-validation-for="Photo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </form>
+</div>
+        </div>
+
