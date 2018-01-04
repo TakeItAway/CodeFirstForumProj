@@ -1,7 +1,78 @@
-﻿
-@{
-    ViewData["Title"] = "_AddComment";
-}
+﻿@*@model CodeFirstForum.ViewModels.AddStepViewModel
 
-<h2>_AddComment</h2>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4>Add Step</h4>
+            <hr />
+            <div class="col-md-4">
+                <div class="thumbnail" style="height: 210px; width:210px">
+                    <img id="photo" style="height: 200px; width: 200px" src="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg">
+                </div>
+                <a href="#" id="upload_widget_opener">Add photo</a>
+                <script src="https://widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+                <script type="text/javascript">
 
+                    document.getElementById("upload_widget_opener").addEventListener("click", function () {
+                        cloudinary.openUploadWidget({
+                            cloud_name: 'mycloud6855', upload_preset: 'kq1ziypj',
+                            sources: ['local', 'url', 'camera'], cropping: 'server',
+                            cropping_aspect_ratio: '1', theme: 'white'
+                        },
+                            function (error, result) {
+                                console.log(error, result)
+                                img = result[0].public_id
+                                version = result[0].version
+                                var theElement = document.getElementById("photo")
+                                theElement.src = "http://res.cloudinary.com/mycloud6855/image/upload/v" + version + "/" + img + ".png"
+                                document.getElementById("inPhoto").value = "http://res.cloudinary.com/mycloud6855/image/upload/v" + version + "/" + img + ".png"
+                            });
+                    },
+                        false
+                    );
+                </script>
+            </div>
+            <div class="col-md-8">
+                <form asp-action="AddStep">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group" hidden="hidden">
+                        <label asp-for="InstructionId" class="control-label"></label>
+                        <input asp-for="InstructionId" class="form-control" value="@Model.InstructionId" />
+                        <span asp-validation-for="InstructionId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Number" class="control-label"></label>
+                        @{
+                            int number = Model.PrevNum + 1;
+                        }
+                        <input asp-for="Number" class="form-control" value="@number" />
+                        <span asp-validation-for="Number" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" value="" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Content" class="control-label"></label>
+                        <textarea asp-for="Content" class="form-control" rows="5" value=""></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" hidden="hidden">
+                        <label asp-for="Photo" class="control-label"></label>
+                        <input asp-for="Photo" id="inPhoto" class="form-control" value="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg" />
+                        <span asp-validation-for="Photo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" hidden="hidden">
+                        <label asp-for="PrevNum" class="control-label"></label>
+                        <input asp-for="PrevNum" class="form-control" value="@Model.PrevNum" />
+                        <span asp-validation-for="PrevNum" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Add" class="btn btn-default" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>*@

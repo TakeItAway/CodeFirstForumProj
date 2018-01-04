@@ -16,7 +16,6 @@ namespace CodeFirstForum.ViewModels
         public List<Comment> Comments { get; set; }
         public ApplicationUser User { get; set; }
         public List<string> Tags { get; set; }   
-        public string Photo { get; set; }
         public ECategory Category { get; set; }
         public ApplicationDbContext Context { get; set; }
     }
