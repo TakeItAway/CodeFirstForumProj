@@ -18,7 +18,5 @@ namespace CodeFirstForum.ViewModels
         public string Title { get; set; }
         [Required]
         public string Content { get; set; }
-        [Required]
-        public int PrevNum { get; set; }
     }
 }

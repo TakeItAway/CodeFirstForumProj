@@ -56,7 +56,7 @@ namespace CodeFirstForum.Controllers
             ManualViewModel model = new ManualViewModel
             {
                 Manual = manual,
-                //Steps = context.Steps.Where(s => s.InstructionId == instr.InstructionId).ToList(),
+                Steps = context.Steps.Where(s => s.ManualId == manual.ManualId).ToList(),
                 Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
                 User = user,
                 Context = context,
@@ -74,6 +74,8 @@ namespace CodeFirstForum.Controllers
             {
                 Manual = null,
                 AuthorId = id,
+                Steps = new List<Step>(),
+                Tags = new List<string>()
             };
 
             return View(model);
@@ -120,7 +122,8 @@ namespace CodeFirstForum.Controllers
             {
                 Manual = i,
                 AuthorId = i.AuthorId,
-                Tags = tags.ToList()
+                Tags = tags.ToList(),
+                Steps = new List<Step>()
             };
             return View("Create", newModel);
         }
@@ -155,7 +158,7 @@ namespace CodeFirstForum.Controllers
             {
                 AuthorId = editMan.AuthorId,
                 Manual = editMan,
-                //Steps = context.Steps.Where(s => s.InstructionId == editInstr.InstructionId).ToList()
+                Steps = context.Steps.Where(s => s.ManualId == editMan.ManualId).ToList()
 
             };
             return View("EditManual", model);
@@ -176,7 +179,7 @@ namespace CodeFirstForum.Controllers
             {
                 AuthorId = editMan.AuthorId,
                 Manual = editMan,
-                //Steps = context.Steps.Where(s => s.ManualId == editInstrManualId).ToList()
+                Steps = context.Steps.Where(s => s.ManualId == editMan.ManualId).ToList()
 
             };
             return View("EditManual", model);
@@ -197,7 +200,7 @@ namespace CodeFirstForum.Controllers
             {
                 Manual = context.Manuals.Find(manualId),
                 User = context.ApplicationUsers.Find(userId),
-                //Steps = context.Steps.Where(s => s.InstructionId == instrId).ToList(),
+                Steps = context.Steps.Where(s => s.ManualId == manualId).ToList(),
                 Tags = ManualHelper.GetAllManualTags(manualId, context),
                 Comments = context.Comments.Where(c => c.ManualId == manualId).ToList(),
                 Context = context
@@ -205,27 +208,59 @@ namespace CodeFirstForum.Controllers
             return View("Manual", model);
         }
 
-        //[HttpPost]
-        //public ActionResult EditStep(int stepId, string authorId, int number, string title, string content, string photo)
-        //{
-        //    Step editStep = context.Steps.Find(stepId);
-        //    editStep.Number = number;
-        //    editStep.Title = title;
-        //    editStep.Content = content;
-        //    editStep.Photo = photo;
+        [HttpPost]
+        [ActionName("AddStep")]
+        public ActionResult AddStep(AddStepViewModel model)
+        {
+            Step step = new Step()
+            {
+                ManualId = model.ManualId,
+                Number = model.Number,
+                Title = model.Title,
+                Content = model.Content
+            };
 
-        //    context.Steps.Update(editStep);
+            context.Steps.Add(step);
+            context.SaveChanges();
 
-        //    CreateViewModel model = new CreateViewModel()
-        //    {
-        //        AuthorId = authorId,
-        //        Instruction = context.Instructions.Find(editStep.InstructionId),
-        //        Steps = context.Steps.Where(s => s.InstructionId == editStep.InstructionId).ToList()
+            List<ManualTag> instrTags = context.ManualTags.Where(it => it.ManualId == model.ManualId).ToList();
+            List<string> tags = new List<string>();
+            foreach (ManualTag it in instrTags)
+            {
+                Tag t = context.Tags.Find(it.TagId);
+                tags.Add(t.Name);
+            }
 
-        //    };
-        //    return View("EditInstruction", model);
-        //}
+            Manual instr = context.Manuals.Find(model.ManualId);
 
 
+            return View("Create", new CreateViewModel()
+            {
+                Manual = instr,
+                AuthorId = instr.AuthorId,
+                Steps = context.Steps.Where(s => s.ManualId == instr.ManualId).ToList(),
+                Tags = tags
+            });
+        }
+
+        [HttpPost]
+        public ActionResult EditStep(int stepId, string authorId, int number, string title, string content, string photo)
+        {
+            Step editStep = context.Steps.Find(stepId);
+            editStep.Number = number;
+            editStep.Title = title;
+            editStep.Content = content;
+
+            context.Steps.Update(editStep);
+
+            CreateViewModel model = new CreateViewModel()
+            {
+                AuthorId = authorId,
+                Manual = context.Manuals.Find(editStep.ManualId),
+                Steps = context.Steps.Where(s => s.ManualId == editStep.ManualId).ToList()
+
+            };
+            return View("EditManual", model);
+        }
     }
 }

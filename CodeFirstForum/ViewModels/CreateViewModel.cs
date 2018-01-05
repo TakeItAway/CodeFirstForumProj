@@ -11,9 +11,8 @@ namespace CodeFirstForum.ViewModels
     {
         [Required]
         public string AuthorId { get; set; }
-
         public Manual Manual { get; set; }
-
         public List<string> Tags { get; set; }
+        public List<Step> Steps { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@*@model CodeFirstForum.ViewModels.AddStepViewModel
+﻿@model CodeFirstForum.ViewModels.AddStepViewModel
 
 <div class="row">
     <div class="panel panel-default">
@@ -36,18 +36,13 @@
                 <form asp-action="AddStep">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group" hidden="hidden">
-                        <label asp-for="InstructionId" class="control-label"></label>
-                        <input asp-for="InstructionId" class="form-control" value="@Model.InstructionId" />
-                        <span asp-validation-for="InstructionId" class="text-danger"></span>
+                        <label asp-for="ManualId" class="control-label"></label>
+                        <input asp-for="ManualId" class="form-control" value="@Model.ManualId" />
+                        <span asp-validation-for="ManualId" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Number" class="control-label"></label>
                         @{
-                            int number = Model.PrevNum + 1;
+                            int number = Model.Number + 1;
                         }
-                        <input asp-for="Number" class="form-control" value="@number" />
-                        <span asp-validation-for="Number" class="text-danger"></span>
-                    </div>
                     <div class="form-group">
                         <label asp-for="Title" class="control-label"></label>
                         <input asp-for="Title" class="form-control" value="" />
@@ -59,14 +54,9 @@
                         <span asp-validation-for="Content" class="text-danger"></span>
                     </div>
                     <div class="form-group" hidden="hidden">
-                        <label asp-for="Photo" class="control-label"></label>
-                        <input asp-for="Photo" id="inPhoto" class="form-control" value="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg" />
-                        <span asp-validation-for="Photo" class="text-danger"></span>
-                    </div>
-                    <div class="form-group" hidden="hidden">
-                        <label asp-for="PrevNum" class="control-label"></label>
-                        <input asp-for="PrevNum" class="form-control" value="@Model.PrevNum" />
-                        <span asp-validation-for="PrevNum" class="text-danger"></span>
+                        <label asp-for="Number" class="control-label"></label>
+                        <input asp-for="Number" class="form-control" value="@Model.Number" />
+                        <span asp-validation-for="Number" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Add" class="btn btn-default" />
@@ -75,4 +65,4 @@
             </div>
         </div>
     </div>
-</div>*@
+</div>

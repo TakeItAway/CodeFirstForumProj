@@ -1,0 +1,12 @@
+﻿@model CodeFirstForum.ViewModels.CreateViewModel
+
+@foreach (Step item in Model.Steps)
+{
+    <div class="row">
+        <div class="col-md-8">
+            <h3 style="display: inline-block; margin-left:10px">@item.Title</h3>
+            <hr />
+            <h5>@item.Content</h5>
+        </div>
+    </div>
+}

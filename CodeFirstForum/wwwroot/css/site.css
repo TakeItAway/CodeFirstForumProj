@@ -55,6 +55,14 @@
     padding-top: 10px;
 }
 
+.bootstrap-tagsinput {
+    width: 100%;
+}
+
+.label {
+    line-height: 2;
+}
+
 /* QR code generator */
 #qrCode {
     margin: 15px;

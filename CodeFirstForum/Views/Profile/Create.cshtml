@@ -1,18 +1,16 @@
-﻿
-@model CodeFirstForum.ViewModels.CreateViewModel
+﻿@model CodeFirstForum.ViewModels.CreateViewModel
 @{
     ViewData["Title"] = "Create";
 }
-    <h2>Create</h2>
-    <a asp-action="Index">Back to Profile</a>
-    <hr />
-
+<h2>Create</h2>
+<a asp-action="Index">Back to Profile</a>
+<hr />
 @{
-    string id = Model.AuthorId;
+    string id = Model.AuthorId;    
 }
 @if (Model.Manual == null)
 {
-    Html.RenderPartial("_CreateManual", new CodeFirstForum.ViewModels.CreateManualViewModel() { AuthorId = id });
+    Html.RenderPartial("_CreateManual", new CodeFirstForum.ViewModels.CreateManualViewModel() { AuthorId = id, });
 }
 else
 {
@@ -33,9 +31,20 @@ else
             }
             <h5>@Model.Manual.Description</h5>
         </div>
-
     </div>
     <hr />
+    <div>
+        @{
+            Html.RenderPartial("_CreatedSteps", Model);
+        }
+    </div>
+
+
+    <div class="row">
+        @{
+            Html.RenderPartial("_AddStep", new CodeFirstForum.ViewModels.AddStepViewModel { ManualId = Model.Manual.ManualId, Number = Model.Steps.Count });
+        }
+    </div>
     <div class="row">
         <form asp-action="SaveAll" method="post" asp-route-id="@Model.Manual.ManualId">
             <button type="submit" class="btn btn-primary" style="display:inline-block; position: relative;text-align:center">
