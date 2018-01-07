@@ -15,7 +15,6 @@ namespace CodeFirstForum.Controllers
 {
     public class ProfileController : Controller
     {
-
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext context;
@@ -28,7 +27,6 @@ namespace CodeFirstForum.Controllers
             StrictBoldItalic = true
         });
 
-
         public ProfileController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext)
@@ -39,11 +37,14 @@ namespace CodeFirstForum.Controllers
             context = dbContext;
         }
 
-        // GET: Profile
         public async Task<IActionResult> Index()
         {
             List<Manual> toDelete = context.Manuals.Where(i => i.Saved == false).ToList();
-            context.Manuals.RemoveRange(toDelete);
+            foreach(Manual man in toDelete)
+            {
+                DelEmptyTags(man.ManualId, context);
+                context.Manuals.Remove(man);
+            }
             context.SaveChanges();
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -52,28 +53,6 @@ namespace CodeFirstForum.Controllers
             }
             return View(user);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Manual(int id)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-            Manual manual = context.Manuals.Find(id);
-            ManualViewModel model = new ManualViewModel
-            {
-                Manual = manual,
-                Steps = context.Steps.Where(s => s.ManualId == manual.ManualId).ToList(),
-                Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
-                User = user,
-                Context = context,
-                Tags = ManualHelper.GetAllManualTags(id, context)
-            };
-            return View(model);
-        }
-
         [HttpGet]
         [HttpPost]
         public ActionResult Create(string id)
@@ -151,14 +130,8 @@ namespace CodeFirstForum.Controllers
         {
             Manual delMan = context.Manuals.Find(id);
             context.Manuals.Remove(delMan);
+            DelEmptyTags(id, context);
             List<ManualTag> manualTags = ManualHelper.GetManualTags(id, context);
-            foreach (ManualTag mTag in manualTags)
-            {
-                if (ManualHelper.CountSameNameManualTags(mTag.ManualTagId, context) < 2)
-                {
-                    context.Tags.Remove(context.Tags.Find(mTag.TagId));
-                }
-            }
             context.Comments.RemoveRange(ManualHelper.GetManualComments(id, context));
             context.Steps.RemoveRange(ManualHelper.GetManualSteps(id, context));
             context.ManualTags.RemoveRange(manualTags);
@@ -177,28 +150,6 @@ namespace CodeFirstForum.Controllers
                 AuthorId = editMan.AuthorId,
                 Manual = editMan,
                 Steps = context.Steps.Where(s => s.ManualId == editMan.ManualId).ToList()
-
-            };
-            return View("EditManual", model);
-        }
-
-        [HttpPost]
-        public ActionResult EditManualHead(string authorId, int manId, string title, string descr, string photo)
-        {
-            Manual editMan = context.Manuals.Find(manId);
-            editMan.AuthorId = authorId;
-            editMan.Title = mark.Transform(title);
-            editMan.Description = mark.Transform(descr);
-            editMan.Photo = photo;
-
-            context.Manuals.Update(editMan);
-
-            CreateViewModel model = new CreateViewModel()
-            {
-                AuthorId = editMan.AuthorId,
-                Manual = editMan,
-                Steps = context.Steps.Where(s => s.ManualId == editMan.ManualId).ToList()
-
             };
             return View("EditManual", model);
         }
@@ -206,7 +157,6 @@ namespace CodeFirstForum.Controllers
         [HttpPost]
         public ActionResult AddComment(string content, string userId, int manualId)
         {
-           
             Comment toAdd = new Comment()
             {
                 AuthorId = userId,
@@ -273,39 +223,34 @@ namespace CodeFirstForum.Controllers
                 Tags = tags
             });
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Step(int id)
+        [HttpPost]
+        public ActionResult EditManualHead(string authorId, int manualId, string title, string descr, string photo)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            Manual editMan = context.Manuals.Find(manualId);
+            editMan.Title = mark.Transform(title);
+            editMan.Description = mark.Transform(descr);
+            editMan.Photo = photo;
+
+            context.Manuals.Update(editMan);
+            context.SaveChanges();
+            CreateViewModel model = new CreateViewModel()
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-            Step step = context.Steps.Find(id);
-            Manual manual = context.Manuals.Find(step.ManualId);
-            StepViewModel model = new StepViewModel
-            {
-                Step = step,
-                Manual = manual,
-                Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
-                User = user,
-                Context = context,
-                Tags = ManualHelper.GetAllManualTags(manual.ManualId, context)
+                AuthorId = editMan.AuthorId,
+                Manual = editMan,
+                Steps = context.Steps.Where(s => s.ManualId == editMan.ManualId).ToList()
             };
-            return View(model);
+            return View("EditManual", model);
         }
 
         [HttpPost]
-        public ActionResult EditStep(int stepId, string authorId, int number, string title, string content, string photo)
+        public ActionResult EditStep(int stepId, string authorId, string title, string content, string photo)
         {
             Step editStep = context.Steps.Find(stepId);
-            editStep.Number = number;
             editStep.Title = mark.Transform(title);
             editStep.Content = mark.Transform(content);
 
             context.Steps.Update(editStep);
-
+            context.SaveChanges();
             CreateViewModel model = new CreateViewModel()
             {
                 AuthorId = authorId,
@@ -314,34 +259,17 @@ namespace CodeFirstForum.Controllers
             };
             return View("EditManual", model);
         }
-
-        [HttpPost]
-        [ActionName("LikeComment")]
-        public ActionResult LikeComment(string userId, int commentId)
+        private void DelEmptyTags(int id, ApplicationDbContext context)
         {
-            //Comment comment = context.Comments.Find(commentId);
-            //comment.VoteCount += 1;
-            //Manual manual = context.Manuals.Find(comment.ManualId);
-            //int manualId = manual.ManualId;
-            //context.SaveChanges();
-            //ManualViewModel model = new ManualViewModel()
-            //{
-            //    Manual = manual,
-            //    User = context.ApplicationUsers.Find(userId),
-            //    Steps = context.Steps.Where(s => s.ManualId == manualId).ToList(),
-            //    Tags = ManualHelper.GetAllManualTags(manualId, context),
-            //    Comments = context.Comments.Where(c => c.ManualId == manualId).ToList(),
-            //    Context = context
-            //};
-            return View("Test");
-        }
-        public IActionResult Test(int userId)
-        {
-            TestViewModel model = new TestViewModel()
+            List<ManualTag> manualTags = ManualHelper.GetManualTags(id, context);
+            foreach (ManualTag mTag in manualTags)
             {
-                ID = userId
-            };
-            return View(model);
+                if (ManualHelper.CountSameNameManualTags(mTag.ManualTagId, context) < 2)
+                {
+                    context.Tags.Remove(context.Tags.Find(mTag.TagId));
+                }
+            }
+            context.SaveChanges();
         }
     }
 }

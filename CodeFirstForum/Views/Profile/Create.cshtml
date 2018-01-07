@@ -21,7 +21,7 @@ else
             </div>
         </div>
         <div class="col-md-8">
-            <h3>@Model.Manual.Title</h3>
+            <h3>@Html.Raw(@Model.Manual.Title)</h3>
             <hr />
             <label class="control-label">Tags:</label>
             @foreach (string tag in Model.Tags)
@@ -29,7 +29,7 @@ else
                 <button class="btn btn-info btn-sm">@tag</button>
 
             }
-            <h5>@Model.Manual.Description</h5>
+            <h5>@Html.Raw(@Model.Manual.Description)</h5>
         </div>
     </div>
     <hr />

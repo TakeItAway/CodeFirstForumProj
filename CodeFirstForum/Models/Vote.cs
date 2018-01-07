@@ -11,6 +11,12 @@ namespace CodeFirstForum.Models
         [Key]
         public int VoteId { get; set; }
         public int CommentId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+
+        public Vote(int commendId, string userId)
+        {
+            CommentId = commendId;
+            UserId = userId;
+        }
     }
 }

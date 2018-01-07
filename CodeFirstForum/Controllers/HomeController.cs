@@ -61,6 +61,42 @@ namespace CodeFirstForum.Controllers
                 return View(newModel);
             }
         }
+        public IActionResult ShowCategoryManuals(int category)
+        {
+            List<Manual> manualList = context.Manuals.Where(manual => Convert.ToInt32(manual.Category) == category).ToList();
+            HomeIndexViewModel newModel = new HomeIndexViewModel()
+            {
+                TagId = null,
+                Tags = context.Tags.ToList(),
+                Manuals = manualList,
+                Context = context
+            };
+            return View("Index", newModel);
+        }
+
+        public IActionResult LikeComment(string userId, int commentId)
+        {
+            Comment comment = context.Comments.Find(commentId);
+            //if (context.Votes.Where(c => (c.UserId == userId && c.CommentId == commentId)).ToList().Count() == 0)
+            if (context.Votes.Where(c => c.VoteId == commentId).ToList().Count() == 0)
+            {
+                comment.VoteCount += 1;
+                new Vote(commentId, userId);
+            }
+            Manual manual = context.Manuals.Find(comment.ManualId);
+            int manualId = manual.ManualId;
+            context.SaveChanges();
+            ManualViewModel model = new ManualViewModel()
+            {
+                Manual = manual,
+                User = context.ApplicationUsers.Find(userId),
+                Steps = context.Steps.Where(s => s.ManualId == manualId).ToList(),
+                Tags = ManualHelper.GetAllManualTags(manualId, context),
+                Comments = context.Comments.Where(c => c.ManualId == manualId).ToList(),
+                Context = context
+            };
+            return View("Manual", model);
+        }
 
         public IActionResult About()
         {
@@ -80,9 +116,38 @@ namespace CodeFirstForum.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public IActionResult Manual()
+        [HttpGet]
+        public async Task<IActionResult> Manual(int id)
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            Manual manual = context.Manuals.Find(id);
+            ManualViewModel model = new ManualViewModel
+            {
+                Manual = manual,
+                Steps = context.Steps.Where(s => s.ManualId == manual.ManualId).ToList(),
+                Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
+                User = user,
+                Context = context,
+                Tags = ManualHelper.GetAllManualTags(id, context)
+            };
+            return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Step(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            Step step = context.Steps.Find(id);
+            Manual manual = context.Manuals.Find(step.ManualId);
+            StepViewModel model = new StepViewModel
+            {
+                Step = step,
+                Manual = manual,
+                Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
+                User = user,
+                Context = context,
+                Tags = ManualHelper.GetAllManualTags(manual.ManualId, context)
+            };
+            return View(model);
         }
     }
 }

@@ -1,0 +1,10 @@
+﻿@model CodeFirstForum.ViewModels.HomeIndexViewModel
+@{
+    ViewData["Title"] = "ShowCategoryManuals";
+}
+
+@foreach(Manual man in Model.Manuals)
+{
+    <h4>@man.Title</h4>
+}
+

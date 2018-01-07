@@ -41,17 +41,17 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">Title</label>
-                        <input name="title" class="form-control" value="@Model.Manual.Title" />
+                        <input name="title" class="form-control" value="Edit title" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Description</label>
-                        <input name="descr" class="form-control" value="@Model.Manual.Description" />
+                        <textarea name="descr" class="form-control" rows="10">Edit description</textarea>
                     </div>
                     <div class="form-group" hidden="hidden">
                         <input name="photo" class="form-control" id="inPhoto" value="@Model.Manual.Photo" />
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-default" />
+                        <input type="submit" value="Save" class="btn btn-default" style="color:blue;"/>
                     </div>
                 </form>
                 <hr />
@@ -67,19 +67,15 @@
                             <input name="authorId" class="form-control" value="@Model.AuthorId" />;
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Number</label>
-                            <input name="number" class="form-control" value="@step.Number" />
-                        </div>
-                        <div class="form-group">
                             <label class="control-label">Title</label>
-                            <input name="title" class="form-control" value="@step.Title" />
+                            <input name="title" class="form-control" value="Edit Title" />
                         </div>
                         <div class="form-group">
                             <label class="control-label">Content</label>
-                            <textarea name="content" class="form-control" rows="5">@step.Content</textarea>
+                            <textarea name="content" class="form-control" rows="10">Edit content</textarea>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-default" />
+                            <input type="submit" value="Save" class="btn btn-default" style="color:blue;"/>
                         </div>
                     </form>
                 </div>
@@ -87,6 +83,5 @@
             </div>
 
         }
-
     </div>
 </div>

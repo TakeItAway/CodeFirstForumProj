@@ -6,16 +6,15 @@
     <div class="col-md-12 col-sm-12">
         <a asp-action="Index" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-th-list"></span>All</a>
         @if (Model.TagId != null)
-    {
+        {
         <div>
             @{
             Tag tag = Model.Tags.Find(t => t.TagId == Model.TagId);
             }
         </div>
         <a asp-action="Index" asp-route-tagId="@Model.TagId" class="btn btn-info">@tag.Name</a>
-}
+        }
     </div>
-
 </div>
 <div class="row">
     <div class="col-md-8 col-sm-8">
@@ -30,8 +29,8 @@
                             </div>
                         </div>
                         <div class="col-md-10">
-                            <a asp-controller="Profile" asp-action="Manual" asp-route-id="@manual.ManualId">
-                                <h3>@manual.Title</h3>
+                            <a asp-controller="Home" asp-action="Manual" asp-route-id="@manual.ManualId">
+                                <h3>@Html.Raw(@manual.Title)</h3>
                             </a>
                             <hr />
                             @{
@@ -52,7 +51,7 @@
                                 </div>
                                 <a asp-action="Index" asp-route-tagId="@tag.TagId" class="btn btn-info btn-sm">@tag.Name</a>
                             }
-                            <h5>@manual.Description</h5>
+                                <h5>@Html.Raw(@manual.Description)</h5>
                         </div>
                     </div>
                 </div>
@@ -61,16 +60,30 @@
         }
     </div>
     <aside class="col-md-4 col-sm-4">
-        <div class="panel panel-default">
+        <div class="panel panel-default">    
             <div class="panel-body">
+                <div class="panel-heading" style="background-color:deepskyblue;">
+                    <h3 class="panel-title">Categories</h3>                  
+                </div>
+                <hr />
+                @foreach (ECategory cat in Enum.GetValues(typeof(ECategory)))
+                {
+                    <a asp-controller="Home" asp-action="ShowCategoryManuals" asp-all-route-data='new Dictionary<string,string> {{"category", @Convert.ToInt32(cat).ToString() }}'>
+                    <h5>@Html.DisplayFor(modelItem => cat)</h5>
+                </a>
+                }
+            </div>
+        </div>
+        <div class="panel panel-default">    
+            <div class="panel-body">
+                <div class="panel-heading" style="background-color:deepskyblue">
+                    <h3 class="panel-title">Tags</h3>
+                </div>
+                <hr />
                 @foreach (Tag tag in Model.Tags)
                 {
-                    <div>
-                        @{
                             CodeFirstForum.ViewModels.HomeIndexViewModel newModel =
                                             new CodeFirstForum.ViewModels.HomeIndexViewModel { TagId = tag.TagId };
-                        }
-                    </div>
                     <a asp-action="Index" asp-route-tagId="@tag.TagId" class="btn btn-info btn-sm">@tag.Name</a>
                 }
             </div>

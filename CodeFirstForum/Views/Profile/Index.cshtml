@@ -27,7 +27,6 @@
                 <a>last update</a>
                 @*<h3 class="panel-title">Your manuals</h3>*@
             </div>
-
             <table class="table">
                 @{
                     var manuals= db.Manuals.Where(manual => manual.AuthorId == Model.Id);
@@ -35,7 +34,7 @@
                 @foreach (Manual manual in manuals)
                 {
                     <tr>
-                        <td><a asp-action="Manual" asp-route-id="@manual.ManualId">@manual.Title</a></td>
+                        <td><a asp-controller="Home" asp-action="Manual" asp-route-id="@manual.ManualId">@Html.Raw(@manual.Title)</a></td>
                         <td>
                             <form method="post">
                                 <div class="dropdown">

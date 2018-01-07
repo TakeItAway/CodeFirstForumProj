@@ -10,9 +10,7 @@ namespace CodeFirstForum.Models
     {
         [Key]
         public int ManualTagId { get; set; }
-        
         public int ManualId { get; set; }
-        
         public int TagId { get; set; }
     }
 }
