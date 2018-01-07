@@ -19,5 +19,6 @@ namespace CodeFirstForum.ViewModels
         public string Photo { get; set; }
         [Required]
         public string Tags { get; set; }
+        public ECategory Category { get; set; }
     }
 }

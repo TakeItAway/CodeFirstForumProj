@@ -9,13 +9,14 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-4">
-                <div class="thumbnail" style="height: 310px; width:310px">
-                    <img id="photo" style="height: 300px; width: 300px" src="@Model.Manual.Photo">
+            <div class="col-md-2">
+                <div class="thumbnail" style="height: 160px; width:160px">
+                    <img id="photo" style="height: 150px; width: 150px" src="@Model.Manual.Photo">
                 </div>
             </div>
-            <div class="col-md-8">
-                <h2>@Model.Manual.Title</h2>
+            <div class="col-md-10">
+                <h2>@Html.Raw(@Model.Manual.Title)</h2>
+                <h4>Category  : @Html.DisplayFor(modelItem => Model.Manual.Category)</h4>
                 <hr />
                 @foreach (string tag in Model.Tags)
                 {
@@ -24,59 +25,53 @@
                 <hr />
                 <h5>@Model.Manual.Description</h5>
             </div>
-            <hr />
         </div>
         @foreach (Step step in Model.Steps)
         {
-            if (step.Number % 2 != 0)
-            {
-                <div class="row">
-                    <div class="col-md-4">
-
+            <div class="row">
+                 <div class="col-md-0">
                     </div>
-                    <div class="col-md-8">
-                        <h3 style="display: inline-block; margin-left:10px">@step.Title</h3>
-                        <hr />
-                        <h5>@step.Content</h5>
-                    </div>
-
-                </div>
-                <hr />
-            }
-            else
-            {
-                <div class="row">
-                    <div class="col-md-8">
-                        <h3 style="display: inline-block; margin-left:10px">@step.Title</h3>
-                        <hr />
-                        <h5>@step.Content</h5>
+                    <div class="col-md-10">
+                        <a asp-area="" asp-controller="Profile" asp-action="Step" asp-route-id="@step.StepId" class="navbar-brand">
+                            <h4 style="display: inline-block; margin-left:10px">@step.Number.@Html.Raw(@step.Title)</h4>
+                        </a>          
                     </div>
                 </div>
                 <hr />
-            }
-
         }
     </div>
 </div>
 <div id="comments">
+    <h3>Comments:</h3>
 
     @foreach (Comment comment in Model.Comments)
     {
         <div class="panel panel-default">
             <div class="panel-body">
                 @{
-                    ApplicationUser author = Model.Context.ApplicationUsers.Find(comment.AuthorId);
+        ApplicationUser author = Model.Context.ApplicationUsers.Find(comment.AuthorId);
                 }
-                <div class="col-md-1">
-
-                    <div class="thumbnail" style="height: 46px; width:46px">
-                        <img id="photo" style="height: 40px; width: 40px" src="@author.Photo">
-                    </div>
-                </div>
                 <div class="col-md-11">
-                    <b>@author.UserName</b>
+                    @if (author != null) {
+                        <span class="glyphicon glyphicon-user"></span> @author.UserName
+                    }
                     <hr />
-                    <p>@comment.Content</p>
+                    <p>@Html.Raw(@comment.Content)</p>
+                </div>
+                <div class="col-md-12" >                   
+                        @*<a asp-area="" asp-controller="Profile" asp-action="Test" class="navbar-brand">
+                            <div class="form-group" hidden="hidden">
+                                <input asp-for="@Model.User.Id" class="form-control" value="@Model.User.Id" />
+                            </div>
+                            <span class="glyphicon glyphicon-heart">@comment.VoteCount</span>
+                        </a>*@
+                        @*<a asp-controller="Profile" asp-action="Test" class="navbar-brand">
+                            <div class="form-group" hidden="hidden">
+                                <input name="userId" class="form-control" value="@Model.User.Id" />
+                                <input name="commentId" class="form-control" value="commentId" />
+                            </div>
+                            <span class="glyphicon glyphicon-heart">@comment.VoteCount</span>
+                        </a>*@
                 </div>
             </div>
         </div>
@@ -85,13 +80,8 @@
 <div class="row">
     <div class="panel panel-default">
         <div class="panel-body">
-            <div class="col-md-1">
-                <div class="thumbnail" style="height: 46px; width:46px">
-                    <img id="userPhoto" style="height: 40px; width: 40px" src="@Model.User.Photo">
-                </div>
-            </div>
             <div class="col-md-10">
-                <b id="userName">@Model.User.UserName</b>
+                <b id="userName"><span class="glyphicon glyphicon-user"></span>@Model.User.UserName</b>
                 <hr />
                 <form asp-action="AddComment">
                     <textarea name="content" id="message" class="form-control" rows="5" value=""></textarea>

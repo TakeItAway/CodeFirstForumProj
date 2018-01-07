@@ -3,82 +3,124 @@
 @{
     ViewData["Title"] = "Create";
 }
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4>Create</h4>
+            <hr />
+            <div class="col-md-4">
+                <div class="thumbnail" style="height: 160px; width:160px">
+                    <img id="photo" style="height: 150px; width: 150px" src="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg">
+                </div>
 
-<div class="col-md-8">
-    <form asp-action="CreateManual" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group" hidden="hidden">
-            <label asp-for="AuthorId" class="control-label"></label>
-            <input asp-for="AuthorId" class="form-control" value="@Model.AuthorId" />
-            <span asp-validation-for="AuthorId" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Title" class="control-label"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-        <link rel="stylesheet" href="~/lib/bootstrap-tagsinput/src/bootstrap-tagsinput.css" />
-        <style type="text/css">
+                <a href="#" id="upload_widget_opener">Add photo</a>
+                <script src="https://widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+                <script type="text/javascript">
 
-            .bootstrap-tagsinput {
-                width: 100%;
-            }
+                    document.getElementById("upload_widget_opener").addEventListener("click", function () {
+                        cloudinary.openUploadWidget({
+                            cloud_name: 'mycloud6855', upload_preset: 'kq1ziypj',
+                            sources: ['local', 'url', 'camera'], cropping: 'server',
+                            cropping_aspect_ratio: '1', theme: 'white'
+                        },
+                            function (error, result) {
+                                console.log(error, result)
+                                img = result[0].public_id
+                                version = result[0].version
+                                var theElement = document.getElementById("photo")
+                                theElement.src = "http://res.cloudinary.com/mycloud6855/image/upload/v" + version + "/" + img + ".png"
+                                document.getElementById("inPhoto").value = "http://res.cloudinary.com/mycloud6855/image/upload/v" + version + "/" + img + ".png"
+                            });
+                    },
+                        false
+                    );
+                </script>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-12">
+                    <form asp-action="CreateManual" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group" hidden="hidden">
+                            <label asp-for="AuthorId" class="control-label"></label>
+                            <input asp-for="AuthorId" class="form-control" value="@Model.AuthorId" />
+                            <span asp-validation-for="AuthorId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <script src="~/lib/jquery/dist/jquery.js"></script>
+                        <script src="~/lib/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+                        <link rel="stylesheet" href="~/lib/bootstrap-tagsinput/src/bootstrap-tagsinput.css" />
+                        <style type="text/css">
 
-            .label {
-                line-height: 2;
-            }
-        </style>
-        <script>
-                        $(document).ready(function () {
-                            $('#bootstrapTagsInputForm')
-                                .find('[name="tags"]')
-                                // Revalidate the cities field when it is changed
-                                .change(function (e) {
-                                    $('#bootstrapTagsInputForm').formValidation('revalidateField', 'tags');
-                                })
-                                .end()
 
-                                .formValidation({
-                                    framework: 'bootstrap',
-                                    excluded: ':disabled',
-                                    icon: {
-                                        valid: 'glyphicon glyphicon-ok',
-                                        invalid: 'glyphicon glyphicon-remove',
-                                        validating: 'glyphicon glyphicon-refresh'
-                                    },
-                                    fields: {
-                                        cities: {
-                                            validators: {
+                            .bootstrap-tagsinput {
+                                width: 100%;
+                            }
+
+                            .label {
+                                line-height: 2;
+                            }
+                        </style>
+                        <script>
+                            $(document).ready(function () {
+                                $('#bootstrapTagsInputForm')
+                                    .find('[name="tags"]')
+                                    // Revalidate the cities field when it is changed
+                                    .change(function (e) {
+                                        $('#bootstrapTagsInputForm').formValidation('revalidateField', 'tags');
+                                    })
+                                    .end()
+
+                                    .formValidation({
+                                        framework: 'bootstrap',
+                                        excluded: ':disabled',
+                                        icon: {
+                                            valid: 'glyphicon glyphicon-ok',
+                                            invalid: 'glyphicon glyphicon-remove',
+                                            validating: 'glyphicon glyphicon-refresh'
+                                        },
+                                        fields: {
+                                            cities: {
                                                 notEmpty: {
                                                     message: 'Please enter at least one tag.'
                                                 }
                                             }
                                         }
                                     }
-                                });
-                        });
-        </script>
-        <div class="form-group">
-            <label asp-for="Tags" class="control-label">Tags:</label>
-            <input asp-for="Tags" type="text" name="tags" class="form-control"
-                   value="" data-role="tagsinput" aria-hidden="true" />
+                                                            });
+                                                    });
+                        </script>
+                        <div class="form-group">
+                            <label asp-for="Tags" class="control-label">Tags:</label>
+                            <input asp-for="Tags" type="text" name="tags" class="form-control"
+                                   value="" data-role="tagsinput" aria-hidden="true" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" id="message" class="form-control" rows="5" value=""></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Category" class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <select asp-for="Category" asp-items="Html.GetEnumSelectList<ECategory>()" class="form-control"></select>
+                                <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group" hidden="hidden">
+                            <label asp-for="Photo" class="control-label"></label>
+                            <input asp-for="Photo" class="form-control" id="inPhoto" value="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg" />
+                            <span asp-validation-for="Photo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Description" class="control-label"></label>
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div class="form-group" hidden="hidden">
-            <label asp-for="Photo" class="control-label"></label>
-            <input asp-for="Photo" class="form-control" id="inPhoto" value="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg" />
-            <span asp-validation-for="Photo" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-default" />
-        </div>
-    </form>
-</div>
-        </div>
-
+    </div>
+    </div>

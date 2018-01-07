@@ -91,6 +91,8 @@ namespace CodeFirstForum.Data.Migrations
 
                     b.Property<int>("ManualId");
 
+                    b.Property<int>("VoteCount");
+
                     b.HasKey("CommentId");
 
                     b.ToTable("Comments");
@@ -161,7 +163,11 @@ namespace CodeFirstForum.Data.Migrations
 
                     b.Property<int>("ManualId");
 
+                    b.Property<int>("NextId");
+
                     b.Property<int>("Number");
+
+                    b.Property<int>("PrevId");
 
                     b.Property<string>("Title");
 

@@ -8,24 +8,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-<style>
-    .panel {
-        margin-top: 20px
-    }
-    .thumbnail {
-        margin-top: 20px
-    }
 
-    .btn-primary {
-        margin-top: 20px
-    }
-</style>
-
-<div class="row">
+<div class="row" style="margin-top: 10px;">
     <div class="col-sm-6 col-md-3">
         <div class="thumbnail">
-            <img style="height:200px;width:200px" src="@Model.Photo">
-            <div class="caption">
+            <div class="caption">               
                 <h3 style="text-align:center">@Model.UserName</h3>
                 <p>
                     <h5 style="display: inline-block; font-weight:bold">Email:</h5>
@@ -37,7 +24,8 @@
     <div class="col-md-7">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h3 class="panel-title">Your manuals</h3>
+                <a>last update</a>
+                @*<h3 class="panel-title">Your manuals</h3>*@
             </div>
 
             <table class="table">
@@ -57,13 +45,11 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                         <li><a asp-action="Delete" asp-route-id="@manual.ManualId">Delete</a></li>
                                         <li><a asp-action="Edit" asp-route-id="@manual.ManualId">Edit</a></li>
-
                                     </ul>
                                 </div>
                             </form>
                         </td>
                     </tr>
-
                 }
             </table>
         </div>

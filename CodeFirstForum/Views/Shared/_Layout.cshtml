@@ -41,11 +41,10 @@
                             </form>
                         </div>
                     </li>
-                    @*TODO: чтоб незалогированным юзерам не было доступа*@
-                    @if(true)
+                    @if (User.Identity.IsAuthenticated)
                     {
                         <li><a asp-area="" asp-controller="Profile" asp-action="Index">Manuals</a></li>
-                    }                   
+                    }
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     @if (User.IsInRole("admin"))
@@ -85,7 +84,6 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>

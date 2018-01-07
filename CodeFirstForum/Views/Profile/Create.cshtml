@@ -16,8 +16,8 @@ else
 {
     <div class="row">
         <div class="col-md-4">
-            <div class="thumbnail" style="height: 310px; width:310px">
-                <img id="photo" style="height: 300px; width: 300px" src="@Model.Manual.Photo">
+            <div class="thumbnail" style="height: 160px; width:160px">
+                <img id="photo" style="height: 150px; width: 150px" src="@Model.Manual.Photo">
             </div>
         </div>
         <div class="col-md-8">
@@ -38,8 +38,6 @@ else
             Html.RenderPartial("_CreatedSteps", Model);
         }
     </div>
-
-
     <div class="row">
         @{
             Html.RenderPartial("_AddStep", new CodeFirstForum.ViewModels.AddStepViewModel { ManualId = Model.Manual.ManualId, Number = Model.Steps.Count });

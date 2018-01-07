@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CodeFirstForum.Data;
 using CodeFirstForum.Models;
 using CodeFirstForum.ViewModels;
+using HeyRed.MarkdownSharp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,15 @@ namespace CodeFirstForum.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext context;
+        Markdown mark = new Markdown(new MarkdownOptions
+        {
+            AutoHyperlink = true,
+            AutoNewLines = true,
+            LinkEmails = true,
+            QuoteSingleLine = true,
+            StrictBoldItalic = true
+        });
+
 
         public ProfileController(
           UserManager<ApplicationUser> userManager,
@@ -27,7 +37,6 @@ namespace CodeFirstForum.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             context = dbContext;
-
         }
 
         // GET: Profile
@@ -69,18 +78,15 @@ namespace CodeFirstForum.Controllers
         [HttpPost]
         public ActionResult Create(string id)
         {
-
             CreateViewModel model = new CreateViewModel()
             {
                 Manual = null,
                 AuthorId = id,
                 Steps = new List<Step>(),
-                Tags = new List<string>()
+                Tags = new List<string>()            
             };
-
             return View(model);
         }
-
         [HttpPost]
         [ActionName("CreateManual")]
         public ActionResult CreateManual(CreateManualViewModel model)
@@ -88,9 +94,10 @@ namespace CodeFirstForum.Controllers
             Manual manual = new Manual()
             {
                 AuthorId = model.AuthorId,
-                Title = model.Title,
-                Description = model.Description,
-                Photo = model.Photo
+                Title = mark.Transform(model.Title),
+                Description = mark.Transform(model.Description),
+                Photo = model.Photo,
+                Category = model.Category
             };
             EntityEntry<Manual> e = context.Manuals.Add(manual);
             context.SaveChanges();
@@ -144,6 +151,17 @@ namespace CodeFirstForum.Controllers
         {
             Manual delMan = context.Manuals.Find(id);
             context.Manuals.Remove(delMan);
+            List<ManualTag> manualTags = ManualHelper.GetManualTags(id, context);
+            foreach (ManualTag mTag in manualTags)
+            {
+                if (ManualHelper.CountSameNameManualTags(mTag.ManualTagId, context) < 2)
+                {
+                    context.Tags.Remove(context.Tags.Find(mTag.TagId));
+                }
+            }
+            context.Comments.RemoveRange(ManualHelper.GetManualComments(id, context));
+            context.Steps.RemoveRange(ManualHelper.GetManualSteps(id, context));
+            context.ManualTags.RemoveRange(manualTags);
             context.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -169,8 +187,8 @@ namespace CodeFirstForum.Controllers
         {
             Manual editMan = context.Manuals.Find(manId);
             editMan.AuthorId = authorId;
-            editMan.Title = title;
-            editMan.Description = descr;
+            editMan.Title = mark.Transform(title);
+            editMan.Description = mark.Transform(descr);
             editMan.Photo = photo;
 
             context.Manuals.Update(editMan);
@@ -188,11 +206,13 @@ namespace CodeFirstForum.Controllers
         [HttpPost]
         public ActionResult AddComment(string content, string userId, int manualId)
         {
+           
             Comment toAdd = new Comment()
             {
                 AuthorId = userId,
-                Content = content,
-                ManualId = manualId
+                Content = mark.Transform(content),
+                ManualId = manualId,
+                VoteCount = 0
             };
             context.Comments.Add(toAdd);
             context.SaveChanges();
@@ -216,11 +236,23 @@ namespace CodeFirstForum.Controllers
             {
                 ManualId = model.ManualId,
                 Number = model.Number,
-                Title = model.Title,
-                Content = model.Content
+                Title = mark.Transform(model.Title),
+                Content = mark.Transform(model.Content)
             };
 
             context.Steps.Add(step);
+            context.SaveChanges();
+
+            if (step.Number != 0)
+            {
+                List<Step> steps = context.Steps.Where(t => t.ManualId == model.ManualId).ToList();
+                Step prevStep = steps.Find(x => x.Number == model.Number - 1);
+                Step firstStep = steps.Find(x => x.Number == 0);
+                firstStep.PrevId = step.StepId;
+                step.NextId = firstStep.StepId;
+                prevStep.NextId = step.StepId;
+                step.PrevId = prevStep.StepId;
+            }
             context.SaveChanges();
 
             List<ManualTag> instrTags = context.ManualTags.Where(it => it.ManualId == model.ManualId).ToList();
@@ -233,7 +265,6 @@ namespace CodeFirstForum.Controllers
 
             Manual instr = context.Manuals.Find(model.ManualId);
 
-
             return View("Create", new CreateViewModel()
             {
                 Manual = instr,
@@ -243,13 +274,35 @@ namespace CodeFirstForum.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Step(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            Step step = context.Steps.Find(id);
+            Manual manual = context.Manuals.Find(step.ManualId);
+            StepViewModel model = new StepViewModel
+            {
+                Step = step,
+                Manual = manual,
+                Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
+                User = user,
+                Context = context,
+                Tags = ManualHelper.GetAllManualTags(manual.ManualId, context)
+            };
+            return View(model);
+        }
+
         [HttpPost]
         public ActionResult EditStep(int stepId, string authorId, int number, string title, string content, string photo)
         {
             Step editStep = context.Steps.Find(stepId);
             editStep.Number = number;
-            editStep.Title = title;
-            editStep.Content = content;
+            editStep.Title = mark.Transform(title);
+            editStep.Content = mark.Transform(content);
 
             context.Steps.Update(editStep);
 
@@ -258,9 +311,37 @@ namespace CodeFirstForum.Controllers
                 AuthorId = authorId,
                 Manual = context.Manuals.Find(editStep.ManualId),
                 Steps = context.Steps.Where(s => s.ManualId == editStep.ManualId).ToList()
-
             };
             return View("EditManual", model);
+        }
+
+        [HttpPost]
+        [ActionName("LikeComment")]
+        public ActionResult LikeComment(string userId, int commentId)
+        {
+            //Comment comment = context.Comments.Find(commentId);
+            //comment.VoteCount += 1;
+            //Manual manual = context.Manuals.Find(comment.ManualId);
+            //int manualId = manual.ManualId;
+            //context.SaveChanges();
+            //ManualViewModel model = new ManualViewModel()
+            //{
+            //    Manual = manual,
+            //    User = context.ApplicationUsers.Find(userId),
+            //    Steps = context.Steps.Where(s => s.ManualId == manualId).ToList(),
+            //    Tags = ManualHelper.GetAllManualTags(manualId, context),
+            //    Comments = context.Comments.Where(c => c.ManualId == manualId).ToList(),
+            //    Context = context
+            //};
+            return View("Test");
+        }
+        public IActionResult Test(int userId)
+        {
+            TestViewModel model = new TestViewModel()
+            {
+                ID = userId
+            };
+            return View(model);
         }
     }
 }

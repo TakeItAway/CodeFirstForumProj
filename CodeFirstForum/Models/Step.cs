@@ -14,5 +14,7 @@ namespace CodeFirstForum.Models
         public int Number { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public int NextId { get; set; }
+        public int PrevId { get; set; }
     }
 }

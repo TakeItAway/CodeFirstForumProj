@@ -12,7 +12,6 @@ namespace CodeFirstForum.Models
     public class ApplicationUser : IdentityUser
     {
         public bool IsBlocked { get; set; }
-        public string Photo { get; set; }
         public ELanguage Language { get; set; }
         public ETheme Theme { get; set; }
     }
