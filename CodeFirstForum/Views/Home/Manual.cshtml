@@ -13,6 +13,7 @@
                 <div class="thumbnail" style="height: 160px; width:160px">
                     <img id="photo" style="height: 150px; width: 150px" src="@Model.Manual.Photo">
                 </div>
+                <h5 style="color:deepskyblue;">@Model.Manual.ReleaseDate</h5>
             </div>
             <div class="col-md-10">
                 <h2>@Html.Raw(@Model.Manual.Title)</h2>
@@ -21,9 +22,9 @@
                 </a>
                 <hr />
                 @foreach (string tag in Model.Tags)
-                {
+    {
             <button class="btn btn-info btn-sm">@tag</button>
-                }
+        }
                 <hr />
                 <h5>@Html.Raw(@Model.Manual.Description)</h5>
             </div>
@@ -35,7 +36,7 @@
                 </div>
                 <div class="col-md-10">
                     <a asp-area="" asp-controller="Home" asp-action="Step" asp-route-id="@step.StepId" class="navbar-brand">
-                        <h4 style="display: inline-block; margin-left:10px">@step.Number.@Html.Raw(@step.Title)</h4>
+                        <h4 style="display: inline-block; margin-left:10px">@Html.Raw(@step.Title)</h4>
                     </a>
                 </div>
             </div>
@@ -79,7 +80,7 @@
                 <div class="col-md-10">
                     <b id="userName"><span class="glyphicon glyphicon-user"></span>@Model.User.UserName</b>
                     <hr />
-                    <form asp-controller="Profile" asp-action="AddComment">
+                    <form asp-controller="Home" asp-action="AddComment">
                         <textarea name="content" id="message" class="form-control" rows="6" value=""></textarea>
                         <div class="form-group" hidden="hidden">
                             <input name="userId" class="form-control" value="@Model.User.Id" />

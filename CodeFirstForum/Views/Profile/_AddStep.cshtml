@@ -3,8 +3,17 @@
 <div class="row">
     <div class="panel panel-default">
         <div class="panel-body">
-            <h4>Add Step</h4>  
-            <div class="col-md-0">                
+            <h4>Add Step</h4>
+            <hr />
+            <div class="col-md-4">
+                <div class="thumbnail" style="height: 210px; width:210px">
+                    <img id="photo" style="height: 200px; width: 200px" src="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg">
+                </div>
+                <a href="#" id="upload_widget_opener">Add photo</a>
+                <script src="https://widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+                <script src="~/js/photo.js" type="text/javascript"></script>
+            </div>
+            <div class="col-md-0">
             </div>
             <div class="col-md-8">
                 <form asp-action="AddStep">
@@ -14,18 +23,28 @@
                         <input asp-for="ManualId" class="form-control" value="@Model.ManualId" />
                         <span asp-validation-for="ManualId" class="text-danger"></span>
                     </div>
-                        @{
-                            int number = Model.Number + 1;
-                        }
+                    @{
+        int number = Model.Number + 1;
+                    }
                     <div class="form-group">
                         <label asp-for="Title" class="control-label"></label>
                         <input asp-for="Title" class="form-control" value="" />
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+                        <label asp-for="Video" class="control-label"></label>
+                        <input asp-for="Video" class="form-control" value="" />
+                        <span asp-validation-for="Video" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
                         <label asp-for="Content" class="control-label"></label>
-                        <textarea asp-for="Content" class="form-control" rows="5" value=""></textarea>
+                        <textarea asp-for="Content" class="form-control" rows="30" value=""></textarea>
                         <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" hidden="hidden">
+                        <label asp-for="Photo" class="control-label"></label>
+                        <input asp-for="Photo" id="inPhoto" class="form-control" value="http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg" />
+                        <span asp-validation-for="Photo" class="text-danger"></span>
                     </div>
                     <div class="form-group" hidden="hidden">
                         <label asp-for="Number" class="control-label"></label>

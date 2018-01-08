@@ -12,9 +12,10 @@ using System;
 namespace CodeFirstForum.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180108111250_Last")]
+    partial class Last
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +39,8 @@ namespace CodeFirstForum.Data.Migrations
 
                     b.Property<bool>("IsBlocked");
 
+                    b.Property<int>("Language");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -55,6 +58,8 @@ namespace CodeFirstForum.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<int>("Theme");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -129,6 +134,10 @@ namespace CodeFirstForum.Data.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<int>("TotalRatingPoints");
+
+                    b.Property<int>("TotalRatingVotes");
+
                     b.HasKey("ManualId");
 
                     b.ToTable("Manuals");
@@ -146,6 +155,26 @@ namespace CodeFirstForum.Data.Migrations
                     b.HasKey("ManualTagId");
 
                     b.ToTable("ManualTags");
+                });
+
+            modelBuilder.Entity("CodeFirstForum.Models.Messange", b =>
+                {
+                    b.Property<int>("MessangeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AuthorName");
+
+                    b.Property<string>("Content");
+
+                    b.Property<bool>("IsLooked");
+
+                    b.Property<string>("ManualTitle");
+
+                    b.Property<string>("RecipientId");
+
+                    b.HasKey("MessangeId");
+
+                    b.ToTable("Messanges");
                 });
 
             modelBuilder.Entity("CodeFirstForum.Models.Step", b =>

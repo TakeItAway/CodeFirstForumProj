@@ -12,26 +12,7 @@
                 </div>
                 <a href="#" id="upload_widget_opener">Add photo</a>
                 <script src="https://widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-                <script type="text/javascript">
-
-                    document.getElementById("upload_widget_opener").addEventListener("click", function () {
-                        cloudinary.openUploadWidget({
-                            cloud_name: 'mycloud6855', upload_preset: 'kq1ziypj',
-                            sources: ['local', 'url', 'camera'], cropping: 'server',
-                            cropping_aspect_ratio: '1', theme: 'white'
-                        },
-                            function (error, result) {
-                                console.log(error, result)
-                                img = result[0].public_id
-                                version = result[0].version
-                                var theElement = document.getElementById("photo")
-                                theElement.src = "http://res.cloudinary.com/mycloud6855/image/upload/v" + version + "/" + img + ".png"
-                                document.getElementById("inPhoto").value = "http://res.cloudinary.com/mycloud6855/image/upload/v" + version + "/" + img + ".png"
-                            });
-                    },
-                        false
-                    );
-                </script>
+                <script src="~/js/photo.js" type="text/javascript"></script>
             </div>
             <div class="col-md-8">
                 <form asp-action="EditManualHead" method="post">
@@ -41,11 +22,11 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">Title</label>
-                        <input name="title" class="form-control" value="Edit title" />
+                        <input name="title" class="form-control" value="@Html.Raw(Model.Manual.Title)" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Description</label>
-                        <textarea name="descr" class="form-control" rows="10">Edit description</textarea>
+                        <textarea name="descr" class="form-control" rows="10">@Html.Raw(Model.Manual.Description)"</textarea>
                     </div>
                     <div class="form-group" hidden="hidden">
                         <input name="photo" class="form-control" id="inPhoto" value="@Model.Manual.Photo" />
@@ -68,11 +49,11 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Title</label>
-                            <input name="title" class="form-control" value="Edit Title" />
+                            <input name="title" class="form-control" value="@Html.Raw(step.Title)" />
                         </div>
                         <div class="form-group">
                             <label class="control-label">Content</label>
-                            <textarea name="content" class="form-control" rows="10">Edit content</textarea>
+                            <textarea name="content" class="form-control" rows="15">@Html.Raw(step.Content)</textarea>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Save" class="btn btn-default" style="color:blue;"/>

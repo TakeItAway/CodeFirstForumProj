@@ -31,16 +31,6 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <div class="search-box">
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <input type="text" name="q" value="@ViewBag.searchQuery" class="search-text form-control" placeholder="Search..." />
-                                </div>
-                                <button type="submit" class="btn btn-info">Search</button>
-                            </form>
-                        </div>
-                    </li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a asp-area="" asp-controller="Profile" asp-action="Index">Manuals</a></li>

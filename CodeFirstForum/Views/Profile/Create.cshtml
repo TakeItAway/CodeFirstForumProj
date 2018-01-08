@@ -15,30 +15,6 @@
 else
 {
     <div class="row">
-        <div class="col-md-4">
-            <div class="thumbnail" style="height: 160px; width:160px">
-                <img id="photo" style="height: 150px; width: 150px" src="@Model.Manual.Photo">
-            </div>
-        </div>
-        <div class="col-md-8">
-            <h3>@Html.Raw(@Model.Manual.Title)</h3>
-            <hr />
-            <label class="control-label">Tags:</label>
-            @foreach (string tag in Model.Tags)
-            {
-                <button class="btn btn-info btn-sm">@tag</button>
-
-            }
-            <h5>@Html.Raw(@Model.Manual.Description)</h5>
-        </div>
-    </div>
-    <hr />
-    <div>
-        @{
-            Html.RenderPartial("_CreatedSteps", Model);
-        }
-    </div>
-    <div class="row">
         @{
             Html.RenderPartial("_AddStep", new CodeFirstForum.ViewModels.AddStepViewModel { ManualId = Model.Manual.ManualId, Number = Model.Steps.Count });
         }

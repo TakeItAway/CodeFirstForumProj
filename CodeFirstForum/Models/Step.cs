@@ -16,5 +16,7 @@ namespace CodeFirstForum.Models
         public string Content { get; set; }
         public int NextId { get; set; }
         public int PrevId { get; set; }
+        public string Photo { get; set; }
+        public string Video { get; set; }
     }
 }

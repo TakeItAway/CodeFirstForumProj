@@ -12,9 +12,10 @@ using System;
 namespace CodeFirstForum.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180108002135_Eleventh")]
+    partial class Eleventh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +39,8 @@ namespace CodeFirstForum.Data.Migrations
 
                     b.Property<bool>("IsBlocked");
 
+                    b.Property<int>("Language");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -55,6 +58,8 @@ namespace CodeFirstForum.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<int>("Theme");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -119,15 +124,15 @@ namespace CodeFirstForum.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("LastUpdate");
-
                     b.Property<string>("Photo");
-
-                    b.Property<DateTime>("ReleaseDate");
 
                     b.Property<bool>("Saved");
 
                     b.Property<string>("Title");
+
+                    b.Property<int>("TotalRatingPoints");
+
+                    b.Property<int>("TotalRatingVotes");
 
                     b.HasKey("ManualId");
 
@@ -161,13 +166,9 @@ namespace CodeFirstForum.Data.Migrations
 
                     b.Property<int>("Number");
 
-                    b.Property<string>("Photo");
-
                     b.Property<int>("PrevId");
 
                     b.Property<string>("Title");
-
-                    b.Property<string>("Video");
 
                     b.HasKey("StepId");
 

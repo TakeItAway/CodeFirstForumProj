@@ -24,15 +24,6 @@ namespace CodeFirstForum
             {
                 await roleManager.CreateAsync(new IdentityRole("author"));
             }
-            if (await userManager.FindByNameAsync("admin") == null)
-            {
-                ApplicationUser admin = new ApplicationUser { Email = "admin@gmail.com", UserName = "admin", EmailConfirmed = true };
-                IdentityResult result = await userManager.CreateAsync(admin, "admin");
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(admin, "admin");
-                }
-            }
         }
     }
 }

@@ -27,9 +27,11 @@ namespace CodeFirstForum.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string Photo { get; set; }
-        public int TotalRatingPoints { get; set; }
-        public int TotalRatingVotes { get; set; }
         public ECategory Category { get; set; }
         public bool Saved { get; set; }
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yy}", ApplyFormatInEditMode = true)]
+        public DateTime ReleaseDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yy}", ApplyFormatInEditMode = true)]
+        public DateTime LastUpdate { get; set; }
     }
 }

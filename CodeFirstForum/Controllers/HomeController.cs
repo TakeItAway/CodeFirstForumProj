@@ -8,11 +8,20 @@ using CodeFirstForum.Models;
 using CodeFirstForum.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using CodeFirstForum.Data;
+using HeyRed.MarkdownSharp;
 
 namespace CodeFirstForum.Controllers
 {
     public class HomeController : Controller
     {
+        Markdown mark = new Markdown(new MarkdownOptions
+        {
+            AutoHyperlink = true,
+            AutoNewLines = true,
+            LinkEmails = true,
+            QuoteSingleLine = true,
+            StrictBoldItalic = true
+        });
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext context;
@@ -39,6 +48,7 @@ namespace CodeFirstForum.Controllers
                 {
                     list.Add(context.Manuals.Find(manual.ManualId));
                 }
+                list.Reverse();
                 HomeIndexViewModel newModel = new HomeIndexViewModel()
                 {
                     TagId = tagId,
@@ -74,17 +84,47 @@ namespace CodeFirstForum.Controllers
             return View("Index", newModel);
         }
 
-        public IActionResult LikeComment(string userId, int commentId)
+        public IActionResult LikeComment(string userId, int commentId, string path)
         {
             Comment comment = context.Comments.Find(commentId);
-            //if (context.Votes.Where(c => (c.UserId == userId && c.CommentId == commentId)).ToList().Count() == 0)
-            if (context.Votes.Where(c => c.VoteId == commentId).ToList().Count() == 0)
+           
+            if (context.Votes.Where(c => c.CommentId == commentId && c.UserId == userId).ToList().Count == 0)
             {
-                comment.VoteCount += 1;
-                new Vote(commentId, userId);
-            }
+                comment.VoteCount++;
+                Vote vote = new Vote()
+                {
+                    CommentId = commentId,
+                    UserId = userId,
+                };
+                context.Votes.Add(vote);
+            }         
             Manual manual = context.Manuals.Find(comment.ManualId);
-            int manualId = manual.ManualId;
+            context.SaveChanges();
+            ManualViewModel model = new ManualViewModel()
+            {
+                Manual = manual,
+                User = context.ApplicationUsers.Find(userId),
+                Steps = context.Steps.Where(s => s.ManualId == manual.ManualId).ToList(),
+                Tags = ManualHelper.GetAllManualTags(manual.ManualId, context),
+                Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
+                Context = context
+            };
+            return View("Manual", model);
+        }
+
+        [HttpPost]
+        public ActionResult AddComment(string content, string userId, int manualId)
+        {
+            Comment toAdd = new Comment()
+            {
+                AuthorId = userId,
+                Content = mark.Transform(content),
+                ManualId = manualId,
+                VoteCount = 0,
+            };
+            Manual manual = context.Manuals.Find(manualId);
+            manual.LastUpdate = DateTime.Today;
+            context.Comments.Add(toAdd);
             context.SaveChanges();
             ManualViewModel model = new ManualViewModel()
             {
@@ -145,7 +185,7 @@ namespace CodeFirstForum.Controllers
                 Comments = context.Comments.Where(c => c.ManualId == manual.ManualId).ToList(),
                 User = user,
                 Context = context,
-                Tags = ManualHelper.GetAllManualTags(manual.ManualId, context)
+                Tags = ManualHelper.GetAllManualTags(manual.ManualId, context),
             };
             return View(model);
         }

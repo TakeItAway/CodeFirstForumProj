@@ -76,7 +76,9 @@ namespace CodeFirstForum.Controllers
                 Title = mark.Transform(model.Title),
                 Description = mark.Transform(model.Description),
                 Photo = model.Photo,
-                Category = model.Category
+                Category = model.Category,
+                ReleaseDate = DateTime.Today,
+                LastUpdate = DateTime.Today
             };
             EntityEntry<Manual> e = context.Manuals.Add(manual);
             context.SaveChanges();
@@ -155,30 +157,6 @@ namespace CodeFirstForum.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddComment(string content, string userId, int manualId)
-        {
-            Comment toAdd = new Comment()
-            {
-                AuthorId = userId,
-                Content = mark.Transform(content),
-                ManualId = manualId,
-                VoteCount = 0
-            };
-            context.Comments.Add(toAdd);
-            context.SaveChanges();
-            ManualViewModel model = new ManualViewModel()
-            {
-                Manual = context.Manuals.Find(manualId),
-                User = context.ApplicationUsers.Find(userId),
-                Steps = context.Steps.Where(s => s.ManualId == manualId).ToList(),
-                Tags = ManualHelper.GetAllManualTags(manualId, context),
-                Comments = context.Comments.Where(c => c.ManualId == manualId).ToList(),
-                Context = context
-            };
-            return View("Manual", model);
-        }
-
-        [HttpPost]
         [ActionName("AddStep")]
         public ActionResult AddStep(AddStepViewModel model)
         {
@@ -187,7 +165,9 @@ namespace CodeFirstForum.Controllers
                 ManualId = model.ManualId,
                 Number = model.Number,
                 Title = mark.Transform(model.Title),
-                Content = mark.Transform(model.Content)
+                Content = mark.Transform(model.Content),
+                Photo = model.Photo,
+                Video = model.Video
             };
 
             context.Steps.Add(step);
@@ -202,6 +182,11 @@ namespace CodeFirstForum.Controllers
                 step.NextId = firstStep.StepId;
                 prevStep.NextId = step.StepId;
                 step.PrevId = prevStep.StepId;
+            }
+            else
+            {
+                step.PrevId = step.StepId;
+                step.NextId = step.StepId;
             }
             context.SaveChanges();
 
@@ -230,6 +215,7 @@ namespace CodeFirstForum.Controllers
             editMan.Title = mark.Transform(title);
             editMan.Description = mark.Transform(descr);
             editMan.Photo = photo;
+            editMan.LastUpdate = DateTime.Today;
 
             context.Manuals.Update(editMan);
             context.SaveChanges();

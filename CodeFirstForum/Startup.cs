@@ -44,12 +44,6 @@ namespace CodeFirstForum
             {
                 options.Filters.Add(new RequireHttpsAttribute());
             });
-
-            services.AddAuthentication().AddTwitter(twitterOptions =>
-            {
-                twitterOptions.ConsumerKey = Configuration["pHySbHKWigRuny8unAlVDBvFE"];
-                twitterOptions.ConsumerSecret = Configuration["YABaoPxOlhKohCIhx4imOs6u5ZlJoZSw7GFp8GUeOH4JWpoYIw"];
-            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

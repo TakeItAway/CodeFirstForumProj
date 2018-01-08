@@ -13,30 +13,45 @@
                 <div class="thumbnail" style="height: 160px; width:160px">
                     <img id="photo" style="height: 150px; width: 150px" src="@Model.Manual.Photo">
                 </div>
+                <h5 style="color:deepskyblue;">@Model.Manual.ReleaseDate</h5>
             </div>
             <div class="col-md-10">
                 <a asp-controller="Home" asp-action="Manual" asp-route-id="@Model.Manual.ManualId">
                     <h2>@Html.Raw(@Model.Manual.Title)</h2>
                 </a>
-                <h4>Category  : @Html.DisplayFor(modelItem => Model.Manual.Category)</h4>
+                <a asp-controller="Home" asp-action="ShowCategoryManuals" asp-all-route-data='new Dictionary<string,string> {{"category", @Convert.ToInt32(Model.Manual.Category).ToString() }}'>
+                    <h4>Category : @Html.DisplayFor(modelItem => Model.Manual.Category)</h4>
+                </a>
                 <hr />
                 @foreach (string tag in Model.Tags)
-                {
-                    <button class="btn btn-info btn-sm">@tag</button>
-                }
+            {
+                <button class="btn btn-info btn-sm">@tag</button>
+        }
                 <hr />
                 <h5>@Html.Raw(@Model.Manual.Description)</h5>
             </div>
         </div>
         <hr />
         <div class="row">
+            @if (@Model.Step.Photo != @"http://res.cloudinary.com/mycloud6855/image/upload/v1510241495/empty_avatar_gkgqwa.jpg")
+                 {
             <div class="col-md-10">
+                <div class="col-md-2">
+                    <div class="thumbnail" style="height: 210px; width:210px">
+                        <img id="photo" style="height: 200px; width: 200px" src="@Model.Step.Photo">
+                    </div>
+                </div>
             </div>
+                }
             <div class="col-md-10">
                 <h3 style="display: inline-block; margin-left:10px">@Html.Raw(@Model.Step.Title)</h3>
                 <h5>@Html.Raw(@Model.Step.Content)</h5>
             </div>
         </div>
+        @if (@Model.Step.Video != null)
+        {
+            <iframe width="560" height="315" src="@Model.Step.Video" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+        }
         <hr />
         <p style="text-align: center">
             <a asp-controller="Home" asp-action="Step" asp-route-id="@Model.Step.PrevId">
@@ -66,9 +81,7 @@
                     <p>@Html.Raw(@comment.Content)</p>
                 </div>
                 <div class="col-md-12">
-                    <a asp-area="" asp-fragment="LikeComment" class="navbar-brand" style="text-align:left;">
                         <span class="glyphicon glyphicon-heart">@comment.VoteCount</span>
-                    </a>
                     <p>
                 </div>
             </div>
@@ -83,7 +96,7 @@
                 <div class="col-md-10">
                     <b id="userName"><span class="glyphicon glyphicon-user"></span>@Model.User.UserName</b>
                     <hr />
-                    <form asp-controller="Profile" asp-action="AddComment">
+                    <form asp-controller="Home" asp-action="AddComment">
                         <textarea name="content" id="message" class="form-control" rows="5" value=""></textarea>
                         <div class="form-group" hidden="hidden">
                             <input name="userId" class="form-control" value="@Model.User.Id" />

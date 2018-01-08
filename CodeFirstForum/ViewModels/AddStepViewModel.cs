@@ -18,5 +18,7 @@ namespace CodeFirstForum.ViewModels
         public string Title { get; set; }
         [Required]
         public string Content { get; set; }
+        public string Photo { get; set; }
+        public string Video { get; set; }
     }
 }

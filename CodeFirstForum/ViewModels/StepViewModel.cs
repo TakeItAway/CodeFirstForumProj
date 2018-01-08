@@ -18,5 +18,7 @@ namespace CodeFirstForum.ViewModels
         public ApplicationUser User { get; set; }
         public List<string> Tags { get; set; }
         public ApplicationDbContext Context { get; set; }
+        public string Photo { get; set; }
+        public string Video { get; set; }
     }
 }
