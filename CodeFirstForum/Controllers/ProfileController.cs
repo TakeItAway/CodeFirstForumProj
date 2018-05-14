@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CodeFirstForum.Data;
-using CodeFirstForum.Models;
+using CF.Data;
+using CF.Data.Models;
 using CodeFirstForum.ViewModels;
 using HeyRed.MarkdownSharp;
 using Microsoft.AspNetCore.Http;
@@ -40,7 +40,7 @@ namespace CodeFirstForum.Controllers
         public async Task<IActionResult> Index()
         {
             List<Manual> toDelete = context.Manuals.Where(i => i.Saved == false).ToList();
-            foreach(Manual man in toDelete)
+            foreach (Manual man in toDelete)
             {
                 DelEmptyTags(man.ManualId, context);
                 context.Manuals.Remove(man);
@@ -62,7 +62,7 @@ namespace CodeFirstForum.Controllers
                 Manual = null,
                 AuthorId = id,
                 Steps = new List<Step>(),
-                Tags = new List<string>()            
+                Tags = new List<string>()
             };
             return View(model);
         }

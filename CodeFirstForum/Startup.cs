@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using CodeFirstForum.Data;
-using CodeFirstForum.Models;
 using CodeFirstForum.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
+using CF.Data.Models;
+using CF.Data;
 
 namespace CodeFirstForum
 {
@@ -22,9 +23,10 @@ namespace CodeFirstForum
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            using (SqlConnection connection = new SqlConnection())
+            {
+                services.AddDbContext<ApplicationDbContext>();
+            }
             services.AddIdentity<ApplicationUser, IdentityRole>(opts => {
                 opts.Password.RequiredLength = 4;
                 opts.Password.RequireNonAlphanumeric = false;
@@ -60,7 +62,6 @@ namespace CodeFirstForum
             }
 
             app.UseStaticFiles();
-
             app.UseAuthentication();
 
             app.UseMvc(routes =>

@@ -41,16 +41,6 @@
                                     tags.Add(Model.Context.Tags.Find(mTag.TagId));
                                 }
                             }
-                            @foreach (Tag tag in tags)
-                            {
-                                <div>
-                                    @{
-                                        CodeFirstForum.ViewModels.HomeIndexViewModel newModel =
-                                            new CodeFirstForum.ViewModels.HomeIndexViewModel { TagId = tag.TagId };
-                                    }
-                                </div>
-                                <a asp-action="Index" asp-route-tagId="@tag.TagId" class="btn btn-info btn-sm">@tag.Name</a>
-                            }
                                 <h5>@Html.Raw(@manual.Description)</h5>
                         </div>
                     </div>
@@ -82,8 +72,6 @@
                 <hr />
                 @foreach (Tag tag in Model.Tags)
                 {
-                            CodeFirstForum.ViewModels.HomeIndexViewModel newModel =
-                                            new CodeFirstForum.ViewModels.HomeIndexViewModel { TagId = tag.TagId };
                     <a asp-action="Index" asp-route-tagId="@tag.TagId" class="btn btn-info btn-sm">@tag.Name</a>
                 }
             </div>

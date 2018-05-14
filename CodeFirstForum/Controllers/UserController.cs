@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CodeFirstForum.Models;
+using CF.Data.Models;
 using CodeFirstForum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,11 +48,8 @@ namespace CodeFirstForum.Controllers
                     user.Email = model.Email;
                     user.UserName = model.UserName;
                     var userRoles = await _userManager.GetRolesAsync(user);
-                    // получаем все роли
                     var allRoles = _roleManager.Roles.ToList();
-                    // получаем список ролей, которые были добавлены
                     var addedRoles = roles.Except(userRoles);
-                    // получаем роли, которые были удалены
                     var removedRoles = userRoles.Except(roles);
 
                     await _userManager.AddToRolesAsync(user, addedRoles);

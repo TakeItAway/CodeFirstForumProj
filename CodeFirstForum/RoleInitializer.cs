@@ -1,4 +1,4 @@
-﻿using CodeFirstForum.Models;
+﻿using CF.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

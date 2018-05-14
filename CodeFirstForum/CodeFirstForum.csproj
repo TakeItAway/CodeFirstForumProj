@@ -9,6 +9,10 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="0jnje5tw.cys~" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Bower" Version="1.3.11" />
@@ -17,6 +21,9 @@
     <PackageReference Include="MailKit" Version="2.0.0" />
     <PackageReference Include="Markdown" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="MimeKit" Version="2.0.0" />
@@ -118,6 +125,10 @@
     <None Include="wwwroot\lib\jquery\src\var\support.js" />
     <None Include="wwwroot\lib\jquery\src\var\toString.js" />
     <None Include="wwwroot\lib\jquery\src\wrap.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CF.Data\CF.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

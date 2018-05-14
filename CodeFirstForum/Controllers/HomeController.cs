@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using CodeFirstForum.Models;
 using CodeFirstForum.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using CodeFirstForum.Data;
 using HeyRed.MarkdownSharp;
+using CF.Data.Models;
+using CF.Data;
 
 namespace CodeFirstForum.Controllers
 {
@@ -87,7 +87,7 @@ namespace CodeFirstForum.Controllers
         public IActionResult LikeComment(string userId, int commentId, string path)
         {
             Comment comment = context.Comments.Find(commentId);
-           
+
             if (context.Votes.Where(c => c.CommentId == commentId && c.UserId == userId).ToList().Count == 0)
             {
                 comment.VoteCount++;
@@ -97,7 +97,7 @@ namespace CodeFirstForum.Controllers
                     UserId = userId,
                 };
                 context.Votes.Add(vote);
-            }         
+            }
             Manual manual = context.Manuals.Find(comment.ManualId);
             context.SaveChanges();
             ManualViewModel model = new ManualViewModel()

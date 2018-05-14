@@ -1,5 +1,5 @@
-﻿using CodeFirstForum.Data;
-using CodeFirstForum.Models;
+﻿using CF.Data;
+using CF.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

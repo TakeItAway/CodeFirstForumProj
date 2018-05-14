@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using CodeFirstForum.Models;
-using CodeFirstForum.Models.ManageViewModels;
 using CodeFirstForum.Services;
+using CF.Data.Models;
+using CodeFirstForum.ViewModels.ManageViewModels;
 
 namespace CodeFirstForum.Controllers
 {
